@@ -16,7 +16,6 @@ puts "| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/"
 puts "| |                                       "
 puts "|_|                                       "
 
-
 # For each product in the data set:
 products_hash["items"].each do |product|
 
@@ -42,13 +41,12 @@ products_hash["items"].each do |product|
 
   # Calculate and print the average discount (% or $) based off the average sales price
   average_discount = ( product["full-price"].to_i - average_price ) / product["full-price"].to_i * 100
-  puts "Average discount: " + average_discount.round.to_s + "%"
+  puts "Average discount: " + average_discount.round(2).to_s + "%"
 
   #add line divider
   50.times { print "_" }
   puts
 end
-
 
 	puts " _                         _     "
 	puts "| |                       | |    "
@@ -59,7 +57,40 @@ end
 	puts
 
 # For each brand in the data set:
+
   # Print the name of the brand
-  # Count and print the number of the brand's toys we stock
-  # Calculate and print the average price of the brand's toys
-  # Calculate and print the total revenue of all the brand's toy sales combined
+  brands = []
+  products_hash["items"].each do |product|
+    brands << product["brand"] unless brands.include? product["brand"]
+  end
+  puts "There are " + brands.count.to_s + " brands. They are: " + brands.to_s
+
+  #add line divider
+  65.times { print "_" }
+  puts
+
+  brands.each do |brand|
+    brand_stock = 0
+    brand_price = 0
+    brand_revenue = 0
+    brand_qty_sold = 0
+
+    products_hash["items"].each do |product|
+      if product["brand"] == brand
+        brand_stock += product["stock"]
+        product["purchases"].each do |purchase|
+          brand_qty_sold += 1
+          brand_revenue += purchase["price"]
+        end
+      end
+    end
+    # Count and print the number of the brand's toys we stock
+    puts brand.to_s + " has " + brand_stock.to_s + " quantities in stock"
+    # Calculate and print the average price of the brand's toys
+    puts "The average price for " + brand + " brand is: $" + (brand_revenue / brand_qty_sold).round(2).to_s
+    # Calculate and print the total revenue of all the brand's toy sales combined
+    puts "The store has sold " + brand + " brand for a total of: $" + brand_revenue.round(2).to_s
+    #add line divider
+    65.times { print "_" }
+    puts
+  end
